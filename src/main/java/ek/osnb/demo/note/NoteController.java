@@ -30,8 +30,9 @@ class NoteController {
     // A form post (text=...), just like the login form
     @PostMapping("/api/notes")
     @ResponseStatus(HttpStatus.CREATED)
-    Note addNote(@RequestParam String text) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+    Note addNote(@RequestParam String text, Authentication auth) {
+        Note note = new Note(text, auth.getName());
+        return notes.save(note);
     }
 
     @GetMapping("/api/admin/notes")
