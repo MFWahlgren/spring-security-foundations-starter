@@ -1,4 +1,3 @@
-
 export async function getMe() {
     // TODO Exercise 6:
     // GET /api/me
@@ -36,7 +35,13 @@ export async function getNotes(url = "/api/notes") {
 export async function addNote(formData) {
     const response = await fetch("/api/notes", {
         method: "POST",
-        body: new URLSearchParams(formData)
+        body: JSON.stringify(
+            {text: formData.get("text")}
+        ),
+        headers: {
+            "Content-Type": "application/json",
+            "X-XSRF-TOKEN": csrfToken()
+        }
     });
 
     if (!response.ok) {
@@ -51,7 +56,7 @@ function csrfToken() {
     const cookieJar = document.cookie.split("; ");
     const xsrfCookie = cookieJar.find(c => c.startsWith("XSRF-TOKEN="));
 
-    if(!xsrfCookie){
+    if (!xsrfCookie) {
         return null;
     }
 
