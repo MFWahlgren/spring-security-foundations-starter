@@ -1,7 +1,7 @@
-import { createLogin } from "./components/Login.js";
-import { createNotes } from "./components/Notes.js";
-import { createUserInfo } from "./components/UserInfo.js";
-import { getMe } from "./api.js";
+import {createLogin} from "./components/Login.js";
+import {createNotes} from "./components/Notes.js";
+import {createUserInfo} from "./components/UserInfo.js";
+import {getMe} from "./api.js";
 
 window.addEventListener("DOMContentLoaded", render);
 
@@ -14,14 +14,21 @@ async function render() {
     try {
         // TODO Exercise 6:
         // Call getMe()
-        // Not logged in: show only createLogin(render)
-        // Logged in: also show createUserInfo(me, render), and pass me to createNotes(me)
+        const me = await getMe();
+
+        if (!me) {
+            // Not logged in: show only createLogin(render)
+            app.append(createLogin(render));
+            return;
+        }
 
         const heading = document.createElement("h1");
         heading.textContent = "My Notes";
 
         app.append(
             heading,
+            // Logged in: also show createUserInfo(me, render), and pass me to createNotes(me)
+            createUserInfo(me,render),
             createNotes()
         );
 
