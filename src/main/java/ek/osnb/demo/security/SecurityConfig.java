@@ -19,6 +19,8 @@ class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/hello").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/notes").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults())
