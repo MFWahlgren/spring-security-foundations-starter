@@ -19,6 +19,13 @@ class SecurityConfig {
         http
                 .csrf(csrf -> csrf.spa())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/api.js",
+                                "/app.js",
+                                "/components/**",
+                                "/style.css").permitAll()
                         .requestMatchers("/api/hello").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/notes").authenticated()
