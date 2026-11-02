@@ -2,11 +2,7 @@ package ek.osnb.demo.note;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -20,6 +16,8 @@ class NoteController {
         this.notes = notes;
     }
 
+    record CreateNoteRequest(String text) {}
+
     // TODO Exercise 3: Return only the notes owned by the logged-in user
     @GetMapping("/api/notes")
     List<Note> myNotes(Authentication auth) {
@@ -30,8 +28,8 @@ class NoteController {
     // A form post (text=...), just like the login form
     @PostMapping("/api/notes")
     @ResponseStatus(HttpStatus.CREATED)
-    Note addNote(@RequestParam String text, Authentication auth) {
-        Note note = new Note(text, auth.getName());
+    Note addNote(@RequestBody CreateNoteRequest request, Authentication auth) {
+        Note note = new Note(request.text(), auth.getName());
         return notes.save(note);
     }
 
