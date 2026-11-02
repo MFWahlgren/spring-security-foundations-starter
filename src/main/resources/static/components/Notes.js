@@ -29,6 +29,9 @@ export function createNotes(me) {
     const message = section.querySelector(".message");
 
     // TODO Exercise 6: Show the admin button only for users with ROLE_ADMIN
+    if (me.roles.includes("ROLE_ADMIN")) {
+        adminButton.hidden = false;
+    }
 
     async function loadNotes(url = "/api/notes") {
         try {

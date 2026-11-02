@@ -29,7 +29,7 @@ async function render() {
             heading,
             // Logged in: also show createUserInfo(me, render), and pass me to createNotes(me)
             createUserInfo(me,render),
-            createNotes()
+            createNotes(me)
         );
 
     } catch (error) {
