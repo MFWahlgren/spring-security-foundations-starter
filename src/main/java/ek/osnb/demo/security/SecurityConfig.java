@@ -1,5 +1,6 @@
 package ek.osnb.demo.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -31,8 +32,18 @@ class SecurityConfig {
                         .requestMatchers("/api/notes").authenticated()
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults());
+                .formLogin(form -> form
+                        .loginProcessingUrl("/api/login")
+                        .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT))
+                        .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/api/logout")
+                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT))
+                )
+                .exceptionHandling(eh -> eh
+                        .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                );
         return http.build();
     }
 
